@@ -45,7 +45,7 @@ PART=TM4C123GH6PM
 #
 # The base directory for TivaWare.
 #
-ROOT=../..
+ROOT=..
 
 #
 # Include the common make definitions.
@@ -55,7 +55,7 @@ include ${ROOT}/makedefs
 #
 # Where to find header files that do not live in the source directory.
 #
-IPATH=../..
+IPATH=..
 
 #
 # The default rule, which causes the project example to be built.
@@ -82,6 +82,7 @@ ${COMPILER}/project.axf: ${COMPILER}/project.o
 ${COMPILER}/project.axf: ${COMPILER}/startup_${COMPILER}.o
 ${COMPILER}/project.axf: ${ROOT}/driverlib/${COMPILER}/libdriver.a
 ${COMPILER}/project.axf: project.ld
+${COMPILER}/project.axf: ${ROOT}/VL53L7CX/${COMPILER}/vl53l7cx.a
 SCATTERgcc_project=project.ld
 ENTRY_project=ResetISR
 CFLAGSgcc=-DTARGET_IS_BLIZZARD_RA3

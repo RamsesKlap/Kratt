@@ -1,4 +1,4 @@
-gcc/startup_gcc.o: startup_gcc.c \
+gcc/aes.o: aes.c \
  /home/rasmus/st/stm32cubeclt_1.15.0/GNU-tools-for-STM32/lib/gcc/arm-none-eabi/12.3.1/include/stdint.h \
  /home/rasmus/st/stm32cubeclt_1.15.0/GNU-tools-for-STM32/arm-none-eabi/include/stdint.h \
  /home/rasmus/st/stm32cubeclt_1.15.0/GNU-tools-for-STM32/arm-none-eabi/include/machine/_default_types.h \
@@ -6,4 +6,7 @@ gcc/startup_gcc.o: startup_gcc.c \
  /home/rasmus/st/stm32cubeclt_1.15.0/GNU-tools-for-STM32/arm-none-eabi/include/_newlib_version.h \
  /home/rasmus/st/stm32cubeclt_1.15.0/GNU-tools-for-STM32/arm-none-eabi/include/sys/_intsup.h \
  /home/rasmus/st/stm32cubeclt_1.15.0/GNU-tools-for-STM32/arm-none-eabi/include/sys/_stdint.h \
- ../inc/hw_nvic.h ../inc/hw_types.h
+ /home/rasmus/st/stm32cubeclt_1.15.0/GNU-tools-for-STM32/lib/gcc/arm-none-eabi/12.3.1/include/stdbool.h \
+ ../inc/hw_aes.h ../inc/hw_ccm.h ../inc/hw_ints.h ../inc/hw_memmap.h \
+ ../inc/hw_nvic.h ../inc/hw_types.h ../driverlib/aes.h \
+ ../driverlib/debug.h ../driverlib/interrupt.h
