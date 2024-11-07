@@ -16,7 +16,7 @@ void I2CInit(void) {
     I2CMasterInitExpClk(I2C1_BASE, SysCtlClockGet(), false);
 
     // Pull up I2C3 by PB6 and PB7 pins
-    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOA);
+    SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
     GPIOPinTypeGPIOInput(GPIO_PORTA_BASE, GPIO_PIN_6);
     GPIOPinTypeGPIOInput(GPIO_PORTA_BASE, GPIO_PIN_7);
     GPIOPadConfigSet(GPIO_PORTA_BASE, GPIO_PIN_6, GPIO_STRENGTH_12MA, GPIO_PIN_TYPE_STD_WPU);

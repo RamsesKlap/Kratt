@@ -34,7 +34,7 @@ typedef struct
 	 * needs to be added */
 	/* Example for most standard platform : I2C address of sensor */
     uint32_t 			baseI2C;
-	uint16_t  			address;
+	uint8_t  			address;
 
 	// LPn
 	uint32_t			baseLPn;
