@@ -17,26 +17,38 @@ uint8_t _I2CBuffer[256];
 
 
 uint8_t _I2CWrite(VL53L7CX_Platform *p_platform, uint8_t *pData, uint32_t count) {
-    for (volatile uint32_t i = 0; i < count; i++) {
-        I2CMasterSlaveAddrSet(p_platform->baseI2C, p_platform->address, false);
+    I2CMasterSlaveAddrSet(p_platform->baseI2C, p_platform->address, false);
+    I2CMasterDataPut(p_platform->baseI2C, *(pData + 0));
+    I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_SEND_START);
+    while(I2CMasterBusy(p_platform->baseI2C)) {
+    }
+
+    for (uint32_t i = 1; i < count; i++) {
         I2CMasterDataPut(p_platform->baseI2C, *(pData + i));
-        I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_SEND_START);
-        while(I2CMasterBusy(p_platform->baseI2C)) {}
-        I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_SEND_FINISH);
+        I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_SEND_CONT);
         while(I2CMasterBusy(p_platform->baseI2C)) {}
     }
+    I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_SEND_FINISH);
+    while(I2CMasterBusy(p_platform->baseI2C)) {}
     return SUCCESS;
 }
 
 uint8_t _I2CRead(VL53L7CX_Platform *p_platform, uint8_t *pData, uint32_t count) {
-    for (volatile uint32_t i = 0; i < count; i++) {
-        I2CMasterSlaveAddrSet(p_platform->baseI2C, p_platform->address, true);
-        I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_RECEIVE_START);
-        while (I2CMasterBusy(p_platform->baseI2C)) {}
-        I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
+    I2CMasterSlaveAddrSet(p_platform->baseI2C, p_platform->address, true);
+    while (I2CMasterBusy(p_platform->baseI2C)) {}
+    I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_RECEIVE_START);
+    while (I2CMasterBusy(p_platform->baseI2C)) {}
+    pData[0] = I2CMasterDataGet(p_platform->baseI2C);
+
+    for (uint32_t i = 1; i < count; i++) {
+        I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_RECEIVE_CONT);
         while (I2CMasterBusy(p_platform->baseI2C)) {}
         pData[i] = I2CMasterDataGet(p_platform->baseI2C);
     }
+    
+    I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
+    while (I2CMasterBusy(p_platform->baseI2C)) {}
+    pData[count] = I2CMasterDataGet(p_platform->baseI2C);
     return SUCCESS;
 }
 

@@ -1,0 +1,9 @@
+./Platform/platform.c:19:9:_I2CWrite	32	static
+./Platform/platform.c:37:9:_I2CRead	32	static
+./Platform/platform.c:56:9:VL53L7CX_RdByte	32	static
+./Platform/platform.c:79:9:VL53L7CX_WrByte	24	static
+./Platform/platform.c:98:9:VL53L7CX_WrMulti	32	static
+./Platform/platform.c:120:9:VL53L7CX_RdMulti	32	static
+./Platform/platform.c:144:9:VL53L7CX_Reset_Sensor	24	static
+./Platform/platform.c:164:6:VL53L7CX_SwapBuffer	24	static
+./Platform/platform.c:184:9:VL53L7CX_WaitMs	24	static

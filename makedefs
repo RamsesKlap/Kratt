@@ -103,6 +103,7 @@ CFLAGS=-mthumb             \
        ${FPU}              \
        -ffunction-sections \
        -fdata-sections     \
+	   -fstack-usage	   \
        -MD                 \
        -std=c99            \
        -Wall               \
@@ -149,10 +150,10 @@ OBJCOPY=${PREFIX}-objcopy
 # Tell the compiler to include debugging information if the DEBUG environment
 # variable is set.
 #
-ifdef DEBUG
-CFLAGS+=-g -D DEBUG -O0
-else
+ifdef RELEASE
 CFLAGS+=-Os
+else
+CFLAGS+=-g -D DEBUG -O0
 endif
 
 

@@ -84,7 +84,8 @@ ${COMPILER}/project.axf: ${COMPILER}/functions.o
 ${COMPILER}/project.axf: ${ROOT}/driverlib/${COMPILER}/uart.o
 ${COMPILER}/project.axf: ${ROOT}/utils/uartstdio.o
 ${COMPILER}/project.axf: ${ROOT}/driverlib/${COMPILER}/libdriver.a
-${COMPILER}/project.axf: ${ROOT}/VL53L7CX/${COMPILER}/vl53l7cx.a
+${COMPILER}/project.axf: ${ROOT}/VL53L7CX/VL53L7CX_ULD_API/src/vl53l7cx_api.o
+${COMPILER}/project.axf: ${ROOT}/VL53L7CX/Platform/platform.o
 ${COMPILER}/project.axf: project.ld
 SCATTERgcc_project=project.ld
 ENTRY_project=ResetISR
