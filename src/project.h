@@ -22,6 +22,9 @@
 #include "driverlib/i2c.h"
 #include "VL53L7CX/Platform/platform.h"
 #include "VL53L7CX/VL53L7CX_ULD_API/inc/vl53l7cx_api.h"
+#include "inc/hw_i2c.h"
+#include "inc/hw_memmap.h"
+#include "inc/hw_types.h"
 
 // Library for debugging when compiling
 #include "driverlib/debug.h"
@@ -37,6 +40,6 @@ void Delay(uint32_t ms);
 void I2CInit(void);
 
 /*Initializes the required peripherals for the UART protocol*/
-void ConfigureUART(void);
+void UARTInit(void);
 
 #endif // PROJECT_H

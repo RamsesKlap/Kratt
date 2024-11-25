@@ -1,0 +1,3 @@
+functions.c:4:6:Delay	24	static
+functions.c:8:6:UARTInit	8	static
+functions.c:28:6:I2CInit	8	static

@@ -1,0 +1,4 @@
+startup_gcc.c:259:1:ResetISR	16	static,ignoring_inline_asm
+startup_gcc.c:313:1:NmiSR	4	static
+startup_gcc.c:331:1:FaultISR	4	static
+startup_gcc.c:349:1:IntDefaultHandler	4	static

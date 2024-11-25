@@ -1,24 +1,25 @@
 #include "VL53L1X.h"
 #include "VL53L1X_api.h"
+#include 
 
 VL53L1X* active_sensor;
 
-void TOF_InitStruct(VL53L1X* const sensor, I2C_HandleTypeDef* hi2c, uint8_t address, GPIO_TypeDef* xshut_port, uint16_t xshut_pin) {
-	sensor->hi2c = hi2c;
+void TOF_InitStruct(VL53L1X* const sensor, uint32_t* hi2c, uint8_t address, uint32_t* xshut_port, uint32_t xshut_pin) {
+	sensor->baseI2C = hi2c;
 	sensor->address = address;
 
-	sensor->xshut_port = xshut_port;
-	sensor->xshut_pin = xshut_pin;
+	sensor->baseLPn = xshut_port;
+	sensor->pin = xshut_pin;
 }
 
 void TOF_TurnOn(VL53L1X* const sensor) {
 	active_sensor = sensor;
-	HAL_GPIO_WritePin(sensor->xshut_port, sensor->xshut_pin, GPIO_PIN_SET);
+	// HAL_GPIO_WritePin(sensor->xshut_port, sensor->xshut_pin, 1);
 }
 
 void TOF_TurnOff(VL53L1X* const sensor) {
 	active_sensor = sensor;
-	HAL_GPIO_WritePin(sensor->xshut_port, sensor->xshut_pin, GPIO_PIN_RESET);
+	// HAL_GPIO_WritePin(sensor->xshut_port, sensor->xshut_pin, 0);
 }
 
 void TOF_BootMultipleSensors(VL53L1X** const sensors, uint8_t count) {

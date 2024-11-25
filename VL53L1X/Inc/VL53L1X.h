@@ -6,17 +6,17 @@
 
 typedef struct vl53l1x {
 	// I2C information
-	I2C_HandleTypeDef* hi2c;
-	uint8_t address;
+	uint32_t 			baseI2C;
+	uint8_t  			address;
 
-	// XSHUT pin
-	GPIO_TypeDef* xshut_port;
-	uint16_t xshut_pin;
+	// LPn
+	uint32_t			baseLPn;
+	uint32_t			pin;
 } VL53L1X;
 
 void TOF_BootMultipleSensors(VL53L1X** const sensors, uint8_t count);
 
-void TOF_InitStruct(VL53L1X* const sensor, I2C_HandleTypeDef* hi2c, uint8_t address, GPIO_TypeDef* xshut_port, uint16_t xshut_pin);
+void TOF_InitStruct(VL53L1X* const sensor, uint32_t* hi2c, uint8_t address, uint32_t* xshut_port, uint32_t xshut_pin);
 void TOF_BootSensor(VL53L1X* const sensor);
 
 void TOF_TurnOn(VL53L1X* const sensor);

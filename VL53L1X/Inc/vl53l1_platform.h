@@ -7,6 +7,8 @@
 #define _VL53L1_PLATFORM_H_
 
 #include "vl53l1_types.h"
+#include "../../inc/tm4c123gh6pm.h"
+#include "../../driverlib/i2c.h"
 
 #ifdef __cplusplus
 extern "C"

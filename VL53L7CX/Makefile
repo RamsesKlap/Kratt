@@ -20,6 +20,8 @@ ${COMPILER}:
 
 ${COMPILER}/vl53l7cx.a: ${COMPILER}/vl53l7cx_api.o
 ${COMPILER}/vl53l7cx.a: ${COMPILER}/platform.o
+${COMPILER}/vl53l7cx.a: ${ROOT}/driverlib/${COMPILER}/uart.o
+${COMPILER}/vl53l7cx.a: ${ROOT}/utils/uartstdio.o
 
 ifneq (${MAKECMDGOALS},clean)
 -include ${wildcard ${COMPILER}/*.d} __dummy__
