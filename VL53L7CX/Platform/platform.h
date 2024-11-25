@@ -76,8 +76,6 @@ typedef struct
 // #define VL53L7CX_DISABLE_MOTION_INDICATOR
 
 #define DELAY_1MS 1600
-#define FAIL 1
-#define SUCCESS 0
 
 uint8_t _I2CWrite(VL53L7CX_Platform *p_platform, uint8_t *pData, uint32_t count);
 uint8_t _I2CRead(VL53L7CX_Platform *p_platform, uint8_t *pData, uint32_t count);

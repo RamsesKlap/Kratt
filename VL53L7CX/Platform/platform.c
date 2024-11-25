@@ -12,44 +12,84 @@
 
 #include "platform.h"
 #include <string.h>
+#include "driverlib/uart.h"
+#include "utils/uartstdio.h"
 
 uint8_t _I2CBuffer[256];
 
-
 uint8_t _I2CWrite(VL53L7CX_Platform *p_platform, uint8_t *pData, uint32_t count) {
+    uint8_t status = I2C_MASTER_ERR_NONE;
+
     I2CMasterSlaveAddrSet(p_platform->baseI2C, p_platform->address, false);
-    I2CMasterDataPut(p_platform->baseI2C, *(pData + 0));
+    I2CMasterDataPut(p_platform->baseI2C, pData[0]);
     I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_SEND_START);
-    while(I2CMasterBusy(p_platform->baseI2C)) {
+
+    status += I2CMasterErr(p_platform->baseI2C);
+    if (status) {
+        return status;
     }
 
-    for (uint32_t i = 1; i < count; i++) {
-        I2CMasterDataPut(p_platform->baseI2C, *(pData + i));
+    while(I2CMasterBusy(p_platform->baseI2C)) {}
+
+    for (uint32_t i = 1; i < count - 1; i++) {
+        I2CMasterDataPut(p_platform->baseI2C, pData[i]);
         I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_SEND_CONT);
+
+        status += I2CMasterErr(p_platform->baseI2C);
+        if (status) {
+            return status;
+        }
+
         while(I2CMasterBusy(p_platform->baseI2C)) {}
     }
+    I2CMasterDataPut(p_platform->baseI2C, pData[count - 1]);
     I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_SEND_FINISH);
+
+    status += I2CMasterErr(p_platform->baseI2C);
+    if (status) {
+        return status;
+    }
+    
     while(I2CMasterBusy(p_platform->baseI2C)) {}
-    return SUCCESS;
+    return status;
 }
 
 uint8_t _I2CRead(VL53L7CX_Platform *p_platform, uint8_t *pData, uint32_t count) {
+    uint8_t status = I2C_MASTER_ERR_NONE;
+
     I2CMasterSlaveAddrSet(p_platform->baseI2C, p_platform->address, true);
-    while (I2CMasterBusy(p_platform->baseI2C)) {}
     I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_RECEIVE_START);
+
+    status += I2CMasterErr(p_platform->baseI2C);
+    if (status) {
+        return status;
+    }
+
     while (I2CMasterBusy(p_platform->baseI2C)) {}
     pData[0] = I2CMasterDataGet(p_platform->baseI2C);
 
-    for (uint32_t i = 1; i < count; i++) {
+    for (uint32_t i = 1; i < count - 1; i++) {
         I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_RECEIVE_CONT);
+
+        status += I2CMasterErr(p_platform->baseI2C);
+        if (status) {
+            return status;
+        }
+
         while (I2CMasterBusy(p_platform->baseI2C)) {}
         pData[i] = I2CMasterDataGet(p_platform->baseI2C);
     }
     
     I2CMasterControl(p_platform->baseI2C, I2C_MASTER_CMD_BURST_RECEIVE_FINISH);
+
+    status += I2CMasterErr(p_platform->baseI2C);
+    if (status) {
+        return status;
+    }
+
     while (I2CMasterBusy(p_platform->baseI2C)) {}
-    pData[count] = I2CMasterDataGet(p_platform->baseI2C);
-    return SUCCESS;
+    pData[count - 1] = I2CMasterDataGet(p_platform->baseI2C);
+    return status;
 }
 
 uint8_t VL53L7CX_RdByte(
@@ -57,18 +97,17 @@ uint8_t VL53L7CX_RdByte(
 		uint16_t RegisterAdress,
 		uint8_t *p_value)
 {
-	uint8_t status = SUCCESS;
+	uint8_t status = I2C_MASTER_ERR_NONE;
 	_I2CBuffer[0] = RegisterAdress>>8;
 	_I2CBuffer[1] = RegisterAdress&0xFF;
 
-	status = _I2CWrite(p_platform, _I2CBuffer, 2);
+	status += _I2CWrite(p_platform, _I2CBuffer, 2);
     if( status ){
-        status = FAIL;
         goto done;
     }
-    status = _I2CRead(p_platform, p_value, 1);
+    status += _I2CRead(p_platform, p_value, 1);
     if (status != 0) {
-        status = FAIL;
+        goto done;
     }
 done:
 
@@ -80,16 +119,13 @@ uint8_t VL53L7CX_WrByte(
 		uint16_t RegisterAdress,
 		uint8_t value)
 {
-	uint8_t status = SUCCESS;
+	uint8_t status = I2C_MASTER_ERR_NONE;
 	
     _I2CBuffer[0] = RegisterAdress>>8;
     _I2CBuffer[1] = RegisterAdress&0xFF;
     _I2CBuffer[2] = value;
 
-    status = _I2CWrite(p_platform, _I2CBuffer, 3);
-    if (status != 0) {
-        status = FAIL;
-    }
+    status += _I2CWrite(p_platform, _I2CBuffer, 3);
 
 	return status;
 }
@@ -100,18 +136,15 @@ uint8_t VL53L7CX_WrMulti(
 		uint8_t *p_values,
 		uint32_t size)
 {
-	uint8_t status = SUCCESS;
+	uint8_t status = I2C_MASTER_ERR_NONE;
 	
 	if (size > sizeof(_I2CBuffer) - 1) {
-        return FAIL;
+        return 16;
     }
     _I2CBuffer[0] = RegisterAdress>>8;
     _I2CBuffer[1] = RegisterAdress&0xFF;
     memcpy(&_I2CBuffer[2], p_values, size);
-    status = _I2CWrite(p_platform, _I2CBuffer, size + 2);
-    if (status != 0) {
-        status = FAIL;
-    }
+    status += _I2CWrite(p_platform, _I2CBuffer, size + 2);
 
 	return status;
 }
@@ -122,18 +155,17 @@ uint8_t VL53L7CX_RdMulti(
 		uint8_t *p_values,
 		uint32_t size)
 {
-	uint8_t status = SUCCESS;
+	uint8_t status = I2C_MASTER_ERR_NONE;
 	
 	_I2CBuffer[0] = RegisterAdress>>8;
     _I2CBuffer[1] = RegisterAdress&0xFF;
-    status = _I2CWrite(p_platform, _I2CBuffer, 2);
+    status += _I2CWrite(p_platform, _I2CBuffer, 2);
     if (status != 0) {
-        status = FAIL;
         goto done;
     }
-    status = _I2CRead(p_platform, p_values, size);
+    status += _I2CRead(p_platform, p_values, size);
     if (status != 0) {
-        status = FAIL;
+        goto done;
     }
 done:
 	
@@ -186,5 +218,5 @@ uint8_t VL53L7CX_WaitMs(
 {
 	(void) (p_platform);
 	for (volatile uint32_t i = DELAY_1MS * TimeMs; i > 0; i--) {}
-	return SUCCESS; 
+	return I2C_MASTER_ERR_NONE; 
 }

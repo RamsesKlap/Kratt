@@ -35,7 +35,9 @@ int main(void) {
     GPIOPinTypeGPIOOutput(GPIO_PORTF_BASE, GPIO_PIN_4);
     UARTprintf("TOF end\n\r");
 
+    UARTprintf("TOF INIT BEGIN\n\r");
     status = vl53l7cx_init(&sens1);
+    UARTprintf("TOF INIT END\n\r");
 
     status = vl53l7cx_start_ranging(&sens1);
     UARTprintf("Loop start\n\r");

@@ -37,12 +37,14 @@ void I2CInit(void) {
     I2CMasterInitExpClk(I2C1_BASE, SysCtlClockGet(), false);
 
     // Pull up I2C3 by PB6 and PB7 pins
+    /*
     UARTprintf("Pull up pins\n\r");
     SysCtlPeripheralEnable(SYSCTL_PERIPH_GPIOB);
     UARTprintf("GPIO type\n\r");
-    GPIOPinTypeGPIOInput(GPIO_PORTA_BASE, GPIO_PIN_6);
-    GPIOPinTypeGPIOInput(GPIO_PORTA_BASE, GPIO_PIN_7);
+    GPIOPinTypeGPIOInput(GPIO_PORTB_BASE, GPIO_PIN_6);
+    GPIOPinTypeGPIOInput(GPIO_PORTB_BASE, GPIO_PIN_7);
     UARTprintf("Config set\n\r");
-    GPIOPadConfigSet(GPIO_PORTA_BASE, GPIO_PIN_6, GPIO_STRENGTH_12MA, GPIO_PIN_TYPE_STD_WPU);
-    GPIOPadConfigSet(GPIO_PORTA_BASE, GPIO_PIN_7, GPIO_STRENGTH_12MA, GPIO_PIN_TYPE_STD_WPU);
+    GPIOPadConfigSet(GPIO_PORTB_BASE, GPIO_PIN_6, GPIO_STRENGTH_12MA, GPIO_PIN_TYPE_STD_WPU);
+    GPIOPadConfigSet(GPIO_PORTB_BASE, GPIO_PIN_7, GPIO_STRENGTH_12MA, GPIO_PIN_TYPE_STD_WPU); 
+    */
 }
