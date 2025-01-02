@@ -1,7 +1,7 @@
 # Kratt
 This is the repo for a folkrace robot meant to compete at Robotex 2024.
 
-## How to compile and flash onto 
+## How to compile and flash onto Tiva TM4C123GH6PM 
 - Git clone or pull from the repo
 - Go into src/ and compile the project by writing "make" in the terminal
   - You can also run the Makefile in the root directory
